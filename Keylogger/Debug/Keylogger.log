@@ -1,4 +1,4 @@
 ﻿  Keylogger.cpp
-c:\users\deathray\desktop\everything\computer science\projects\keylogger\keylogger\keylogger.cpp(37): warning C4805: '^': unsafe mix of type 'SHORT' and type 'bool' in operation
+c:\users\deathray\desktop\everything\computer science\projects\keylogger\keylogger\keylogger.cpp(41): warning C4805: '^': unsafe mix of type 'SHORT' and type 'bool' in operation
   Keylogger.vcxproj -> C:\Users\Deathray\Desktop\Everything\Computer Science\Projects\Keylogger\Keylogger\Debug\Keylogger.exe
   Keylogger.vcxproj -> C:\Users\Deathray\Desktop\Everything\Computer Science\Projects\Keylogger\Keylogger\Debug\Keylogger.pdb (Full PDB)
