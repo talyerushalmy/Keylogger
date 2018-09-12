@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 
 #define HIDE_CONSOLE true

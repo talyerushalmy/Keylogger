@@ -27,6 +27,15 @@
 *.lib
 
 # Executables
+**/Debug/
 *.exe
 *.out
 *.app
+
+# Output
+**/Log.txt
+*.log
+*.Log
+
+# Visual Studio Stuff
+**/.vs/
