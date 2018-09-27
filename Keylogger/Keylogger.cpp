@@ -92,8 +92,8 @@ string getKeyString(DWORD vkCode)
 		case VK_RSHIFT: return "<RSHIFT>";
 
 		case VK_RETURN: return "<ENTER>";
-		case VK_CAPITAL: return "<CAPLOCK>";
-		case VK_NUMLOCK: return "<NUMLOCK>";
+		case VK_CAPITAL: return string("<CAPLOCK; NOW ") + ((GetKeyState(VK_CAPITAL) & 0x0001) != 0 ? "OFF>" : "ON>");
+		case VK_NUMLOCK: return string("<NUMLOCK; NOW ") + ((GetKeyState(VK_NUMLOCK) & 0x0001) != 0 ? "OFF>" : "ON>");
 
 		case VK_LCONTROL: return "<LCTRL>";
 		case VK_RCONTROL: return "<RCTRL>";
